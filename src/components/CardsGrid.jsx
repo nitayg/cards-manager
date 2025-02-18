@@ -1,7 +1,7 @@
 return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen" style={{ direction: 'rtl' }}>
         {/* Main Content */}
-        <div className={`h-screen overflow-auto ${selectedCard ? 'ml-96' : ''}`} style={{ transition: 'margin 0.3s ease' }}>
+        <div className={`h-screen overflow-auto ${selectedCard ? 'ml-96' : ''}`}>
             <div className="p-4">
                 <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
             </div>
@@ -28,9 +28,9 @@ return (
             </div>
         </div>
 
-        {/* Sidebar */}
+        {/* Sidebar - עכשיו קבוע בצד ימין */}
         {selectedCard && (
-            <div className="fixed top-0 left-0 h-screen w-96 bg-white shadow-lg overflow-y-auto border-r">
+            <div className="fixed top-0 right-0 h-screen w-96 bg-white shadow-lg overflow-y-auto">
                 <CardDetails 
                     card={selectedCard} 
                     onClose={() => setSelectedCard(null)} 
