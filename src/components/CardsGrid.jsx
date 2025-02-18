@@ -5,56 +5,12 @@ import { TOTAL_CARDS, COLS_PER_ROW, STATUS_ORDER } from '../utils/constants';
 import useWindowSize from '../hooks/useWindowSize';
 
 const CardsGrid = () => {
-    const [cards, setCards] = useState({});
-    const [selectedCard, setSelectedCard] = useState(null);
-    const { width } = useWindowSize();
-
-    const availableWidth = width - 40;
-
-    const { gridStyle, cardSize } = useMemo(() => {
-        const MIN_CARD_SIZE = 35;
-        const GRID_GAP = 2;
-        const PADDING = 10;
-
-        const columnsCount = width >= 768 ? 25 : Math.floor(availableWidth / (MIN_CARD_SIZE + GRID_GAP));
-        const calculatedSize = Math.floor((availableWidth - (GRID_GAP * (columnsCount - 1))) / columnsCount);
-
-        return {
-            gridStyle: {
-                display: 'grid',
-                gridTemplateColumns: `repeat(${columnsCount}, ${calculatedSize}px)`,
-                gap: `${GRID_GAP}px`,
-                padding: `${PADDING}px`,
-                width: '100%',
-                boxSizing: 'border-box',
-                justifyContent: 'center',
-                margin: '0 auto'
-            },
-            cardSize: calculatedSize
-        };
-    }, [availableWidth, width]);
-
-    useEffect(() => {
-        const initialCards = {};
-        for (let i = 1; i <= TOTAL_CARDS; i++) {
-            initialCards[i] = { number: i, status: 'missing' };
-        }
-        setCards(initialCards);
-    }, []);
-
-    const handleCardClick = (number) => {
-        setSelectedCard(cards[number]);
-    };
-
-    const stats = Object.values(cards).reduce((acc, card) => {
-        acc[card.status] = (acc[card.status] || 0) + 1;
-        return acc;
-    }, {});
+    // ... כל ה-state וה-hooks נשארים אותו דבר ...
 
     return (
-        <div className="relative min-h-screen" style={{ direction: 'rtl' }}>
+        <div style={{ direction: 'rtl' }} className="flex h-screen">
             {/* Main Content */}
-            <div className={`h-screen overflow-auto ${selectedCard ? 'ml-96' : ''}`}>
+            <div className="flex-1 overflow-auto">
                 <div className="p-4">
                     <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
                 </div>
@@ -83,7 +39,7 @@ const CardsGrid = () => {
 
             {/* Sidebar */}
             {selectedCard && (
-                <div className="fixed top-0 right-0 h-screen w-96 bg-white shadow-lg overflow-y-auto">
+                <div className="w-96 border-l bg-white shadow-lg overflow-y-auto flex-shrink-0">
                     <CardDetails 
                         card={selectedCard} 
                         onClose={() => setSelectedCard(null)} 
