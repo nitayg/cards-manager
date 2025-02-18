@@ -1,10 +1,58 @@
-// ... שאר הייבוא נשאר אותו דבר
+import React, { useState, useEffect, useMemo } from 'react';
+import Card from './Card';
+import CardDetails from './CardDetails';
+import { TOTAL_CARDS, COLS_PER_ROW, STATUS_ORDER } from '../utils/constants';
+import useWindowSize from '../hooks/useWindowSize';
 
 const CardsGrid = () => {
-    // ... כל הקוד הקודם נשאר אותו דבר עד לפונקציית ה-return
+    const [cards, setCards] = useState({});
+    const [selectedCard, setSelectedCard] = useState(null);
+    const { width } = useWindowSize();
+
+    const availableWidth = width - 40;
+
+    const { gridStyle, cardSize } = useMemo(() => {
+        const MIN_CARD_SIZE = 35;
+        const GRID_GAP = 2;
+        const PADDING = 10;
+
+        const columnsCount = width >= 768 ? 25 : Math.floor(availableWidth / (MIN_CARD_SIZE + GRID_GAP));
+        const calculatedSize = Math.floor((availableWidth - (GRID_GAP * (columnsCount - 1))) / columnsCount);
+
+        return {
+            gridStyle: {
+                display: 'grid',
+                gridTemplateColumns: `repeat(${columnsCount}, ${calculatedSize}px)`,
+                gap: `${GRID_GAP}px`,
+                padding: `${PADDING}px`,
+                width: '100%',
+                boxSizing: 'border-box',
+                justifyContent: 'center',
+                margin: '0 auto'
+            },
+            cardSize: calculatedSize
+        };
+    }, [availableWidth, width]);
+
+    useEffect(() => {
+        const initialCards = {};
+        for (let i = 1; i <= TOTAL_CARDS; i++) {
+            initialCards[i] = { number: i, status: 'missing' };
+        }
+        setCards(initialCards);
+    }, []);
+
+    const handleCardClick = (number) => {
+        setSelectedCard(cards[number]);
+    };
+
+    const stats = Object.values(cards).reduce((acc, card) => {
+        acc[card.status] = (acc[card.status] || 0) + 1;
+        return acc;
+    }, {});
 
     return (
-        <div className="h-screen flex flex-row" style={{ direction: 'rtl' }}>
+        <div className="h-screen flex" style={{ direction: 'rtl' }}>
             {/* Main Content */}
             <div className="flex-1 overflow-hidden flex flex-col">
                 <div className="p-4">
@@ -33,14 +81,14 @@ const CardsGrid = () => {
                 </div>
             </div>
 
-            {/* Sidebar - עכשיו מוגדר כחלק מה-flex layout */}
+            {/* Sidebar */}
             {selectedCard && (
-                <aside className="h-screen w-96 flex-shrink-0 border-l shadow-lg bg-white overflow-y-auto fixed right-0 top-0">
+                <div className="w-96 border-l shadow-lg bg-white overflow-y-auto">
                     <CardDetails 
                         card={selectedCard} 
                         onClose={() => setSelectedCard(null)} 
                     />
-                </aside>
+                </div>
             )}
         </div>
     );
