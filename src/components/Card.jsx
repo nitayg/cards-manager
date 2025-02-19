@@ -7,21 +7,22 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         height: '100%',
         aspectRatio: '1',
         backgroundColor: isSelected ? '#4A5568' : STATUS_COLORS[status],
-        border: isSelected ? '2px solid #2D3748' : '1px solid #D0D0D0',
-        borderRadius: '4px',
-        fontSize: `${Math.max(size * 0.4, 12)}px`,
-        fontWeight: 'bold',
+        border: status === 'missing' ? '1px solid #E2E8F0' : 'none',
+        borderRadius: '12px', // יותר מעוגל
+        fontSize: `${Math.max(size * 0.3, 16)}px`,
+        fontWeight: '500',
         padding: '0',
         margin: '0',
         cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: isSelected || status !== 'missing' ? '#fff' : '#000',
+        color: status === 'missing' ? '#4A5568' : '#FFFFFF',
         userSelect: 'none',
         WebkitTapHighlightColor: 'transparent',
         touchAction: 'manipulation',
-        transition: 'all 0.2s'
+        transition: 'all 0.2s',
+        boxShadow: isSelected ? '0 0 0 2px #4A5568' : 'none'
     };
 
     return (
