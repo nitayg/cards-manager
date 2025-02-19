@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Card from './Card';
-import CardDetails from './CardDetails';
+import Panel from './Panel';
 import { TOTAL_CARDS, COLS_PER_ROW, STATUS_ORDER } from '../utils/constants';
 import useWindowSize from '../hooks/useWindowSize';
 
@@ -8,11 +8,10 @@ const CardsGrid = () => {
     const [cards, setCards] = useState({});
     const [selectedCard, setSelectedCard] = useState(null);
     const { width, height } = useWindowSize();
-
-    // בדיקה האם המסך במצב מאוזן
     const isLandscape = width > height;
 
-    const availableWidth = width - 40;
+    // חישוב הרוחב הזמין בהתחשב בפאנל במצב מאוזן
+    const availableWidth = width - (isLandscape && selectedCard ? 424 : 40); // 384px panel + 40px padding
 
     const { gridStyle, cardSize } = useMemo(() => {
         const MIN_CARD_SIZE = 35;
@@ -61,19 +60,36 @@ const CardsGrid = () => {
         setSelectedCard(cards[number]);
     };
 
+    const handlePanelClose = () => {
+        setSelectedCard(null);
+        setCards(prev => {
+            const newCards = { ...prev };
+            Object.keys(newCards).forEach(key => {
+                newCards[key].isSelected = false;
+            });
+            return newCards;
+        });
+    };
+
     const stats = Object.values(cards).reduce((acc, card) => {
         acc[card.status] = (acc[card.status] || 0) + 1;
         return acc;
     }, {});
 
     return (
-        <div style={{ direction: 'rtl' }}>
-            <main style={{ 
-                marginLeft: isLandscape && selectedCard ? '384px' : '0',
-                transition: 'margin 0.3s'
-            }}>
+        <div className="h-screen overflow-hidden" style={{ direction: 'rtl' }}>
+            <main 
+                className={`h-full transition-all duration-300 ${
+                    isLandscape ? 'overflow-x-auto' : 'overflow-y-auto'
+                }`}
+                style={{
+                    marginLeft: isLandscape && selectedCard ? '384px' : '0'
+                }}
+            >
                 <div className="p-4">
-                    <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
+                    <h1 className="text-2xl font-bold text-center mb-4">
+                        מנהל אוסף קלפי כדורגל
+                    </h1>
                 </div>
                 
                 <div className="p-4">
@@ -99,35 +115,12 @@ const CardsGrid = () => {
                 </div>
             </main>
 
-            {selectedCard && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: isLandscape ? '384px' : '100%',
-                    height: '100vh',
-                    backgroundColor: 'white',
-                    boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
-                    overflowY: 'auto',
-                    zIndex: 1000,
-                    transform: !isLandscape ? 'translateY(50%)' : 'none',
-                    borderRadius: !isLandscape ? '8px 8px 0 0' : '0'
-                }}>
-                    <CardDetails 
-                        card={selectedCard} 
-                        onClose={() => {
-                            setSelectedCard(null);
-                            setCards(prev => {
-                                const newCards = { ...prev };
-                                Object.keys(newCards).forEach(key => {
-                                    newCards[key].isSelected = false;
-                                });
-                                return newCards;
-                            });
-                        }}
-                    />
-                </div>
-            )}
+            <Panel 
+                isOpen={selectedCard !== null}
+                card={selectedCard}
+                onClose={handlePanelClose}
+                isLandscape={isLandscape}
+            />
         </div>
     );
 };
