@@ -52,14 +52,33 @@ const CardsGrid = () => {
     }, {});
 
     return (
-        <div className="h-screen w-full flex overflow-hidden" style={{ direction: 'rtl' }}>
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="h-screen" style={{ direction: 'rtl' }}>
+            {/* פאנל צדדי - fixed לצד ימין */}
+            {selectedCard && (
+                <div 
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        right: 0,
+                        width: '384px',
+                        height: '100vh',
+                        zIndex: 50,
+                        backgroundColor: 'white',
+                        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                        overflowY: 'auto'
+                    }}
+                >
+                    <CardDetails card={selectedCard} onClose={() => setSelectedCard(null)} />
+                </div>
+            )}
+
+            {/* תוכן ראשי */}
+            <div className={`h-full overflow-auto ${selectedCard ? 'ml-96' : ''}`}>
                 <div className="p-4">
                     <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
                 </div>
                 
-                <div className="flex-1 overflow-auto p-4">
+                <div className="p-4">
                     <div style={gridStyle}>
                         {Object.values(cards).map((card) => (
                             <Card
@@ -80,16 +99,6 @@ const CardsGrid = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Sidebar */}
-            {selectedCard && (
-                <div className="w-96 border-l bg-white shadow-lg overflow-y-auto">
-                    <CardDetails 
-                        card={selectedCard} 
-                        onClose={() => setSelectedCard(null)} 
-                    />
-                </div>
-            )}
         </div>
     );
 };
