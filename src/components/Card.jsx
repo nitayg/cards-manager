@@ -6,8 +6,8 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         width: '100%',
         height: '100%',
         aspectRatio: '1',
-        backgroundColor: isSelected ? '#4A5568' : STATUS_COLORS[status],  // צבע כהה כשמסומן
-        border: isSelected ? '2px solid #2D3748' : '1px solid #D0D0D0',  // מסגרת בולטת כשמסומן
+        backgroundColor: isSelected ? '#4A5568' : STATUS_COLORS[status],
+        border: isSelected ? '2px solid #2D3748' : '1px solid #D0D0D0',
         borderRadius: '4px',
         fontSize: `${Math.max(size * 0.4, 12)}px`,
         fontWeight: 'bold',
@@ -21,7 +21,7 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         userSelect: 'none',
         WebkitTapHighlightColor: 'transparent',
         touchAction: 'manipulation',
-        transition: 'all 0.2s'  // אנימציה חלקה למעבר בין המצבים
+        transition: 'all 0.2s'
     };
 
     return (
