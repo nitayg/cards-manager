@@ -7,7 +7,10 @@ import useWindowSize from '../hooks/useWindowSize';
 const CardsGrid = () => {
     const [cards, setCards] = useState({});
     const [selectedCard, setSelectedCard] = useState(null);
-    const { width } = useWindowSize();
+    const { width, height } = useWindowSize();
+
+    // בדיקה האם המסך במצב מאוזן
+    const isLandscape = width > height;
 
     const availableWidth = width - 40;
 
@@ -49,11 +52,9 @@ const CardsGrid = () => {
     const handleCardClick = (number) => {
         setCards(prev => {
             const newCards = { ...prev };
-            // Reset all selections
             Object.keys(newCards).forEach(key => {
                 newCards[key].isSelected = false;
             });
-            // Select the clicked card
             newCards[number].isSelected = true;
             return newCards;
         });
@@ -68,7 +69,7 @@ const CardsGrid = () => {
     return (
         <div style={{ direction: 'rtl' }}>
             <main style={{ 
-                marginLeft: selectedCard ? '384px' : '0',
+                marginLeft: isLandscape && selectedCard ? '384px' : '0',
                 transition: 'margin 0.3s'
             }}>
                 <div className="p-4">
@@ -103,18 +104,19 @@ const CardsGrid = () => {
                     position: 'fixed',
                     top: 0,
                     left: 0,
-                    width: '384px',
+                    width: isLandscape ? '384px' : '100%',
                     height: '100vh',
                     backgroundColor: 'white',
                     boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
                     overflowY: 'auto',
-                    zIndex: 1000
+                    zIndex: 1000,
+                    transform: !isLandscape ? 'translateY(50%)' : 'none',
+                    borderRadius: !isLandscape ? '8px 8px 0 0' : '0'
                 }}>
                     <CardDetails 
                         card={selectedCard} 
                         onClose={() => {
                             setSelectedCard(null);
-                            // Reset selection when closing panel
                             setCards(prev => {
                                 const newCards = { ...prev };
                                 Object.keys(newCards).forEach(key => {
