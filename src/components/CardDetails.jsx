@@ -5,67 +5,59 @@ const CardDetails = ({ card, onClose }) => {
 
     return (
         <div className="h-full bg-white">
-            {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b">
+            {/* Header - יותר נקי */}
+            <div className="flex justify-between items-center p-6">
                 <button 
                     onClick={onClose}
-                    className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
+                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600"
                 >
                     ✕
                 </button>
-                <h2 className="text-lg font-medium">קלף #{card.number}</h2>
+                <span className="text-xl font-light">#{card.number}</span>
             </div>
 
             {/* Content */}
-            <div className="p-4 space-y-6">
-                {/* Image Placeholder */}
-                <div className="aspect-[3/4] bg-gray-50 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-200">
-                    <div className="text-3xl mb-2">📷</div>
-                    <button className="px-4 py-2 text-sm text-blue-500 border border-blue-500 rounded-lg hover:bg-blue-50">
+            <div className="px-6 pb-6 space-y-8">
+                {/* Image Area - מודרני יותר */}
+                <div className="aspect-[3/4] rounded-3xl bg-gray-50 flex flex-col items-center justify-center">
+                    <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <button className="px-6 py-2.5 text-sm text-gray-500 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
                         העלה תמונה
                     </button>
                 </div>
 
-                {/* Card Details */}
+                {/* Quick Actions - רשימה אופקית */}
+                <div className="flex justify-around py-2">
+                    <button className="flex flex-col items-center text-gray-500">
+                        <span className="text-2xl mb-1">📥</span>
+                        <span className="text-xs">קליטה</span>
+                    </button>
+                    <button className="flex flex-col items-center text-gray-500">
+                        <span className="text-2xl mb-1">🔄</span>
+                        <span className="text-xs">החלפה</span>
+                    </button>
+                    <button className="flex flex-col items-center text-gray-500">
+                        <span className="text-2xl mb-1">➕</span>
+                        <span className="text-xs">כפול</span>
+                    </button>
+                </div>
+
+                {/* Card Info - מינימליסטי */}
                 <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            שם שחקן
-                        </label>
-                        <div className="p-3 bg-gray-50 rounded-xl text-gray-600">
-                            טרם הוזן
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            קבוצה
-                        </label>
-                        <div className="p-3 bg-gray-50 rounded-xl text-gray-600">
-                            טרם הוזן
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            סטטוס
-                        </label>
-                        <div className="p-3 bg-gray-50 rounded-xl text-gray-600">
-                            {card.status === 'missing' ? 'חסר' : 'קיים במלאי'}
+                    <div className="space-y-2">
+                        <div className="text-sm text-gray-400">סטטוס</div>
+                        <div className="text-lg">
+                            {card.status === 'missing' ? 'חסר באוסף' : 'קיים במלאי'}
                         </div>
                     </div>
                 </div>
 
-                {/* Actions */}
-                <div className="space-y-3 pt-4">
-                    <button className="w-full py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors">
-                        קליטה למלאי
-                    </button>
-                    <button className="w-full py-3 bg-green-500 text-white font-medium rounded-xl hover:bg-green-600 transition-colors">
-                        הוסף לעסקה
-                    </button>
-                    <button className="w-full py-3 bg-gray-50 text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition-colors">
-                        הוסף למלאי כפולים
+                {/* Footer Actions - כפתור מרכזי אחד */}
+                <div className="pt-4">
+                    <button className="w-full py-4 bg-black text-white font-medium rounded-2xl hover:bg-gray-900 transition-colors">
+                        עדכן סטטוס
                     </button>
                 </div>
             </div>

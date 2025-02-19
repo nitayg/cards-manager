@@ -8,7 +8,7 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         aspectRatio: '1',
         backgroundColor: isSelected ? '#4A5568' : STATUS_COLORS[status],
         border: status === 'missing' ? '1px solid #E2E8F0' : 'none',
-        borderRadius: '12px', // יותר מעוגל
+        borderRadius: '12px',
         fontSize: `${Math.max(size * 0.3, 16)}px`,
         fontWeight: '500',
         padding: '0',
@@ -17,7 +17,7 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: status === 'missing' ? '#4A5568' : '#FFFFFF',
+        color: '#FFFFFF', // תמיד לבן, גם במצב נבחר
         userSelect: 'none',
         WebkitTapHighlightColor: 'transparent',
         touchAction: 'manipulation',
