@@ -37,12 +37,23 @@ const CardsGrid = () => {
     useEffect(() => {
         const initialCards = {};
         for (let i = 1; i <= TOTAL_CARDS; i++) {
-            initialCards[i] = { number: i, status: 'missing' };
+            initialCards[i] = { number: i, status: 'missing', isSelected: false };
         }
         setCards(initialCards);
     }, []);
 
     const handleCardClick = (number) => {
+        // מעדכן את כל הקלפים - מוריד סימון מהקודם ומסמן את החדש
+        setCards(prevCards => {
+            const newCards = { ...prevCards };
+            // מאפס את כל הסימונים
+            Object.keys(newCards).forEach(key => {
+                newCards[key].isSelected = false;
+            });
+            // מסמן את הקלף הנוכחי
+            newCards[number].isSelected = true;
+            return newCards;
+        });
         setSelectedCard(cards[number]);
     };
 
@@ -53,7 +64,11 @@ const CardsGrid = () => {
 
     return (
         <div style={{ direction: 'rtl' }}>
-            <main style={{ marginLeft: selectedCard ? '384px' : '0', transition: 'margin 0.3s' }}>
+            <main style={{ 
+                marginRight: selectedCard ? '384px' : '0', 
+                transition: 'margin 0.3s',
+                marginLeft: '0'  // מבטל את ה-margin משמאל
+            }}>
                 <div className="p-4">
                     <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
                 </div>
@@ -65,6 +80,7 @@ const CardsGrid = () => {
                                 key={card.number}
                                 number={card.number}
                                 status={card.status}
+                                isSelected={card.isSelected}
                                 onClick={() => handleCardClick(card.number)}
                                 size={cardSize}
                             />
@@ -84,7 +100,7 @@ const CardsGrid = () => {
                 <div style={{
                     position: 'fixed',
                     top: 0,
-                    right: 0,
+                    right: 0,  // פותח מצד ימין
                     width: '384px',
                     height: '100vh',
                     backgroundColor: 'white',
@@ -94,7 +110,17 @@ const CardsGrid = () => {
                 }}>
                     <CardDetails 
                         card={selectedCard} 
-                        onClose={() => setSelectedCard(null)} 
+                        onClose={() => {
+                            setSelectedCard(null);
+                            // מאפס את הסימון כשסוגרים את הפאנל
+                            setCards(prevCards => {
+                                const newCards = { ...prevCards };
+                                Object.keys(newCards).forEach(key => {
+                                    newCards[key].isSelected = false;
+                                });
+                                return newCards;
+                            });
+                        }} 
                     />
                 </div>
             )}
