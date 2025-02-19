@@ -52,28 +52,8 @@ const CardsGrid = () => {
     }, {});
 
     return (
-        <div className="h-screen" style={{ direction: 'rtl' }}>
-            {/* פאנל צדדי - fixed לצד ימין */}
-            {selectedCard && (
-                <div 
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        right: 0,
-                        width: '384px',
-                        height: '100vh',
-                        zIndex: 50,
-                        backgroundColor: 'white',
-                        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                        overflowY: 'auto'
-                    }}
-                >
-                    <CardDetails card={selectedCard} onClose={() => setSelectedCard(null)} />
-                </div>
-            )}
-
-            {/* תוכן ראשי */}
-            <div className={`h-full overflow-auto ${selectedCard ? 'ml-96' : ''}`}>
+        <div style={{ direction: 'rtl' }}>
+            <main style={{ marginLeft: selectedCard ? '384px' : '0', transition: 'margin 0.3s' }}>
                 <div className="p-4">
                     <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
                 </div>
@@ -98,7 +78,26 @@ const CardsGrid = () => {
                             (stats.source3 || 0) + (stats.source4 || 0))} בדרך
                     </div>
                 </div>
-            </div>
+            </main>
+
+            {selectedCard && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    right: 0,
+                    width: '384px',
+                    height: '100vh',
+                    backgroundColor: 'white',
+                    boxShadow: '-2px 0 5px rgba(0,0,0,0.1)',
+                    overflowY: 'auto',
+                    zIndex: 1000
+                }}>
+                    <CardDetails 
+                        card={selectedCard} 
+                        onClose={() => setSelectedCard(null)} 
+                    />
+                </div>
+            )}
         </div>
     );
 };
