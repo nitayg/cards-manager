@@ -7,9 +7,12 @@ import useWindowSize from '../hooks/useWindowSize';
 const CardsGrid = () => {
     const [cards, setCards] = useState({});
     const [selectedCard, setSelectedCard] = useState(null);
-    const { width } = useWindowSize();
+    const { width, height } = useWindowSize();
 
-    const availableWidth = width - 40;
+    // בדיקה האם המסך במצב מאוזן (landscape)
+    const isLandscape = width > height;
+
+    const availableWidth = width - (isLandscape && selectedCard ? 424 : 40); // 384px לפאנל + 40px padding
 
     const { gridStyle, cardSize } = useMemo(() => {
         const MIN_CARD_SIZE = 35;
@@ -34,41 +37,12 @@ const CardsGrid = () => {
         };
     }, [availableWidth, width]);
 
-    useEffect(() => {
-        const initialCards = {};
-        for (let i = 1; i <= TOTAL_CARDS; i++) {
-            initialCards[i] = { 
-                number: i, 
-                status: 'missing',
-                isSelected: false 
-            };
-        }
-        setCards(initialCards);
-    }, []);
-
-    const handleCardClick = (number) => {
-        setCards(prev => {
-            const newCards = { ...prev };
-            // Reset all selections
-            Object.keys(newCards).forEach(key => {
-                newCards[key].isSelected = false;
-            });
-            // Select the clicked card
-            newCards[number].isSelected = true;
-            return newCards;
-        });
-        setSelectedCard(cards[number]);
-    };
-
-    const stats = Object.values(cards).reduce((acc, card) => {
-        acc[card.status] = (acc[card.status] || 0) + 1;
-        return acc;
-    }, {});
+    // ... שאר הקוד לא משתנה עד לreturn
 
     return (
         <div style={{ direction: 'rtl' }}>
             <main style={{ 
-                marginLeft: selectedCard ? '384px' : '0',
+                marginLeft: isLandscape && selectedCard ? '384px' : '0',
                 transition: 'margin 0.3s'
             }}>
                 <div className="p-4">
@@ -108,13 +82,26 @@ const CardsGrid = () => {
                     backgroundColor: 'white',
                     boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
                     overflowY: 'auto',
-                    zIndex: 1000
+                    zIndex: 1000,
+                    // במצב מאונך הפאנל תמיד יהיה מעל
+                    ...(isLandscape ? {
+                        // במצב מאוזן - הפאנל בצד
+                        backgroundColor: 'white',
+                    } : {
+                        // במצב מאונך - הפאנל מעל עם רקע שקוף שחור
+                        backgroundColor: 'white',
+                        width: '100%',
+                        maxWidth: '384px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        boxShadow: '0 0 15px rgba(0,0,0,0.2)',
+                        borderRadius: '8px 8px 0 0',
+                    })
                 }}>
                     <CardDetails 
                         card={selectedCard} 
                         onClose={() => {
                             setSelectedCard(null);
-                            // Reset selection when closing panel
                             setCards(prev => {
                                 const newCards = { ...prev };
                                 Object.keys(newCards).forEach(key => {
