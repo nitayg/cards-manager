@@ -17,7 +17,6 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        // צבע טקסט דינמי - שחור על רקע לבן, לבן על שאר הצבעים
         color: status === 'missing' && !isSelected ? '#1a1a1a' : '#FFFFFF',
         userSelect: 'none',
         WebkitTapHighlightColor: 'transparent',

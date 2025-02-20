@@ -34,20 +34,44 @@ const CardsGrid = () => {
         };
     }, [width, isLandscape, selectedCard]);
 
-    // ... שאר הלוגיקה נשארת אותה דבר ...
+    useEffect(() => {
+        const initialCards = {};
+        for (let i = 1; i <= TOTAL_CARDS; i++) {
+            initialCards[i] = { 
+                number: i, 
+                status: 'missing',
+                isSelected: false 
+            };
+        }
+        setCards(initialCards);
+    }, []);
+
+    const handleCardClick = (number) => {
+        setCards(prev => {
+            const newCards = { ...prev };
+            Object.keys(newCards).forEach(key => {
+                newCards[key].isSelected = false;
+            });
+            newCards[number].isSelected = true;
+            return newCards;
+        });
+        setSelectedCard(cards[number]);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50" style={{ direction: 'rtl' }}>
             {/* Main Content */}
-            <main style={{ 
+            <main className="min-h-screen overflow-auto" style={{ 
                 marginLeft: isLandscape && selectedCard ? '384px' : '0',
                 transition: 'margin 0.3s ease'
             }}>
+                {/* Header */}
                 <div className="p-4">
                     <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
                 </div>
                 
-                <div className="overflow-x-auto">
+                {/* Grid Container */}
+                <div className="p-4">
                     <div style={gridStyle}>
                         {Object.values(cards).map((card) => (
                             <Card
@@ -63,7 +87,7 @@ const CardsGrid = () => {
                 </div>
             </main>
 
-            {/* Sliding Panel */}
+            {/* Panel */}
             {selectedCard && (
                 <div style={{
                     position: 'fixed',

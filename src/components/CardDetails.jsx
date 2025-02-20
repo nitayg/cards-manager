@@ -35,7 +35,7 @@ const CardDetails = ({ card, onClose, isLandscape }) => {
                 </div>
             </div>
 
-            {/* Action Buttons - Always Visible */}
+            {/* Action Buttons */}
             <div className="p-4 space-y-3">
                 <button className="w-full h-11 bg-black text-white rounded-xl font-medium text-sm hover:bg-gray-900 transition-colors">
                     קליטה למלאי
