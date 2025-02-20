@@ -1,62 +1,50 @@
 import React from 'react';
 
-const CardDetails = ({ card, onClose }) => {
+const CardDetails = ({ card, onClose, isLandscape }) => {
     if (!card) return null;
 
     return (
-        <div className="flex flex-col h-full bg-white" style={{ minHeight: '100%' }}>
-            {/* Modern Header */}
-            <div className="flex items-center justify-between p-6">
+        <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 pb-2">
                 <button 
                     onClick={onClose}
-                    className="w-10 h-10 flex items-center justify-center text-gray-400"
+                    className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100"
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12" />
+                    <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                        <path strokeLinecap="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
-                <div className="text-3xl font-light">#{card.number}</div>
+                <div className="text-2xl font-light">#{card.number}</div>
             </div>
 
-            {/* Main Content */}
-            <div className="flex-1 px-6 space-y-8">
-                {/* Status Badge */}
-                <div className="flex justify-center">
-                    <div className={`
-                        inline-flex items-center px-4 py-2 rounded-full text-sm
-                        ${card.status === 'missing' 
-                            ? 'bg-gray-50 text-gray-600' 
-                            : 'bg-blue-50 text-blue-600'}
-                    `}>
-                        {card.status === 'missing' ? 'חסר באוסף' : 'קיים במלאי'}
-                    </div>
-                </div>
+            {/* Status */}
+            <div className="px-4 text-center text-gray-600">
+                חסר באוסף
+            </div>
 
-                {/* Image Upload Area */}
-                <div className="relative aspect-[3/4] rounded-2xl bg-gray-50 flex flex-col items-center justify-center overflow-hidden">
-                    <svg className="w-10 h-10 text-gray-300 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" 
-                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            {/* Compact Image Area */}
+            <div className="flex-1 px-4 flex items-center justify-center">
+                <div className="w-24 h-24">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full text-gray-300">
+                        <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="2"/>
+                        <path d="M3 16l4-4a1 1 0 011.414 0L16 20" strokeWidth="2"/>
+                        <path d="M16 14l2-2a1 1 0 011.414 0L22 15" strokeWidth="2"/>
+                        <circle cx="8" cy="8" r="2" strokeWidth="2"/>
                     </svg>
-                    <button className="px-6 py-2.5 bg-white rounded-full text-sm font-medium text-gray-600 shadow-sm hover:shadow transition-shadow duration-200">
-                        העלאת תמונה
-                    </button>
                 </div>
             </div>
 
-            {/* Action Buttons - Fixed at bottom with modern style */}
-            <div className="p-6 space-y-4">
-                {/* Primary Action */}
-                <button className="w-full h-12 bg-black text-white rounded-full text-sm font-medium transition-colors hover:bg-gray-900">
+            {/* Action Buttons - Always Visible */}
+            <div className="p-4 space-y-3">
+                <button className="w-full h-11 bg-black text-white rounded-xl font-medium text-sm hover:bg-gray-900 transition-colors">
                     קליטה למלאי
                 </button>
-
-                {/* Secondary Actions */}
-                <div className="flex gap-3">
-                    <button className="flex-1 h-12 bg-transparent text-sm font-medium text-gray-800 rounded-full border-2 border-gray-200 hover:border-gray-300 transition-colors">
+                <div className="flex gap-2">
+                    <button className="flex-1 h-11 bg-gray-100 rounded-xl font-medium text-sm hover:bg-gray-200 transition-colors">
                         הוסף לעסקה
                     </button>
-                    <button className="flex-1 h-12 bg-transparent text-sm font-medium text-gray-800 rounded-full border-2 border-gray-200 hover:border-gray-300 transition-colors">
+                    <button className="flex-1 h-11 bg-gray-100 rounded-xl font-medium text-sm hover:bg-gray-200 transition-colors">
                         כפולים
                     </button>
                 </div>
