@@ -1,5 +1,4 @@
-// CardsGrid.jsx המעודכן לתיקון תצוגת מובייל
-
+// CardsGrid.jsx עם חלוקת מסך ברורה
 import React, { useState, useEffect, useMemo } from 'react';
 import Card from './Card';
 import CardDetails from './CardDetails';
@@ -11,35 +10,70 @@ const CardsGrid = () => {
     const [selectedCard, setSelectedCard] = useState(null);
     const { width, height } = useWindowSize();
     const isLandscape = width > height;
+    const isMobile = width < 768;
 
-    // חישוב רוחב זמין עם מספר משתנה של קלפים בשורה לפי גודל המסך
-    const { gridStyle, cardSize } = useMemo(() => {
-        // בדיקה אם זה מכשיר מובייל (פחות מ-768px)
-        const isMobile = width < 768;
+    // חישוב מספר עמודות ומידות לפי גודל המסך והאוריינטציה
+    const { gridStyle, cardSize, containerStyle } = useMemo(() => {
+        // הגדרת מספר עמודות לפי גודל מסך
+        let GRID_COLS;
         
-        // קביעת מספר עמודות בהתאם לסוג המכשיר
-        const GRID_COLS = isMobile ? (isLandscape ? 12 : 8) : 25;
+        if (isMobile) {
+            // במובייל
+            GRID_COLS = isLandscape ? 12 : 6; // במאונך פחות עמודות
+        } else {
+            // במחשב
+            GRID_COLS = 25;
+        }
         
         const GRID_GAP = isMobile ? 2 : 4;
         const PADDING = isMobile ? 8 : 16;
         
-        // חישוב גודל הקלף בהתבסס על הרוחב הזמין
-        const availableWidth = width - (isLandscape && selectedCard ? 384 : 0) - (PADDING * 2);
+        // חישוב שטח זמין בהתאם למצב המסך
+        let availableWidth, availableHeight;
+        
+        if (selectedCard) {
+            if (isLandscape) {
+                // מצב אופקי - הרשת בצד ימין, הפאנל בצד שמאל
+                availableWidth = width * 0.6 - (PADDING * 2); // 60% מהרוחב
+                availableHeight = height - (PADDING * 2);
+            } else {
+                // מצב אנכי - הרשת למעלה, הפאנל למטה
+                availableWidth = width - (PADDING * 2);
+                availableHeight = height * 0.5 - (PADDING * 2); // 50% מהגובה
+            }
+        } else {
+            // ללא פאנל - מסך מלא
+            availableWidth = width - (PADDING * 2);
+            availableHeight = height - (PADDING * 2);
+        }
+        
+        // חישוב גודל הקלף
         const calculatedSize = Math.floor((availableWidth - (GRID_GAP * (GRID_COLS - 1))) / GRID_COLS);
-
+        
+        // סגנון למיכל הראשי
+        const containerStyle = {
+            display: 'flex',
+            flexDirection: isLandscape ? 'row' : 'column',
+            height: '100vh',
+            width: '100vw',
+            overflow: 'hidden',
+        };
+        
         return {
             gridStyle: {
                 display: 'grid',
                 gridTemplateColumns: `repeat(${GRID_COLS}, ${calculatedSize}px)`,
                 gap: `${GRID_GAP}px`,
                 padding: `${PADDING}px`,
-                width: '100%',
                 boxSizing: 'border-box',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                overflowY: 'auto',
+                overflowX: 'hidden'
             },
-            cardSize: calculatedSize
+            cardSize: calculatedSize,
+            containerStyle
         };
-    }, [width, isLandscape, selectedCard]);
+    }, [width, height, isLandscape, selectedCard, isMobile]);
 
     useEffect(() => {
         const initialCards = {};
@@ -66,20 +100,25 @@ const CardsGrid = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50" style={{ direction: 'rtl' }}>
-            {/* Main Content */}
-            <main className="min-h-screen overflow-auto" style={{ 
-                marginLeft: isLandscape && selectedCard ? '384px' : '0',
-                transition: 'margin 0.3s ease',
-                paddingBottom: !isLandscape && selectedCard ? '50vh' : '0', // שומר מקום לפאנל במצב אנכי
-            }}>
-                {/* Header */}
-                <div className="p-4">
-                    <h1 className="text-2xl font-bold text-center mb-4">מנהל אוסף קלפי כדורגל</h1>
-                </div>
-                
-                {/* Grid Container */}
-                <div className="p-4">
+        <div className="bg-gray-50" style={{ direction: 'rtl', height: '100vh', overflow: 'hidden' }}>
+            {/* Container שמתחלק לשניים כשיש קלף נבחר */}
+            <div style={containerStyle}>
+                {/* חלק עליון/ימני - רשת הקלפים */}
+                <div style={{
+                    flex: isLandscape ? (selectedCard ? '0.6' : '1') : (selectedCard ? '0.5' : '1'),
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflowY: 'auto',
+                    transition: 'all 0.3s ease',
+                    borderBottom: !isLandscape && selectedCard ? '1px solid #e2e8f0' : 'none',
+                    borderLeft: isLandscape && selectedCard ? '1px solid #e2e8f0' : 'none',
+                }}>
+                    {/* כותרת */}
+                    <div className="p-2 text-center">
+                        <h1 className="text-xl font-bold">מנהל אוסף קלפי כדורגל</h1>
+                    </div>
+                    
+                    {/* רשת הקלפים */}
                     <div style={gridStyle}>
                         {Object.values(cards).map((card) => (
                             <Card
@@ -93,41 +132,35 @@ const CardsGrid = () => {
                         ))}
                     </div>
                 </div>
-            </main>
 
-            {/* Panel */}
-            {selectedCard && (
-                <div style={{
-                    position: 'fixed',
-                    top: isLandscape ? 0 : 'auto',
-                    bottom: isLandscape ? 'auto' : 0,
-                    left: isLandscape ? 0 : 0,
-                    width: isLandscape ? '384px' : '100%',
-                    height: isLandscape ? '100vh' : '50vh',
-                    backgroundColor: 'white',
-                    boxShadow: isLandscape ? 
-                        '0 4px 12px rgba(0, 0, 0, 0.1)' : 
-                        '0 -4px 12px rgba(0, 0, 0, 0.1)',
-                    borderRadius: isLandscape ? '0 16px 16px 0' : '16px 16px 0 0',
-                    zIndex: 1000,
-                    transition: 'transform 0.3s ease'
-                }}>
-                    <CardDetails 
-                        card={selectedCard} 
-                        onClose={() => {
-                            setSelectedCard(null);
-                            setCards(prev => {
-                                const newCards = { ...prev };
-                                Object.keys(newCards).forEach(key => {
-                                    newCards[key].isSelected = false;
+                {/* חלק תחתון/שמאלי - פאנל פרטים */}
+                {selectedCard && (
+                    <div style={{
+                        flex: isLandscape ? '0.4' : '0.5',
+                        backgroundColor: 'white',
+                        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.3s ease',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflowY: 'auto'
+                    }}>
+                        <CardDetails 
+                            card={selectedCard} 
+                            onClose={() => {
+                                setSelectedCard(null);
+                                setCards(prev => {
+                                    const newCards = { ...prev };
+                                    Object.keys(newCards).forEach(key => {
+                                        newCards[key].isSelected = false;
+                                    });
+                                    return newCards;
                                 });
-                                return newCards;
-                            });
-                        }}
-                        isLandscape={isLandscape}
-                    />
-                </div>
-            )}
+                            }}
+                            isLandscape={isLandscape}
+                        />
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

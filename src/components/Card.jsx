@@ -1,10 +1,15 @@
-// Card.jsx המעודכן עם התאמות למובייל
+// Card.jsx מעודכן
 import React from 'react';
 import { STATUS_COLORS } from '../utils/constants';
 
 const Card = ({ number, status, onClick, size, isSelected }) => {
-    // הקטנת גודל פונט ביחס לגודל הקלף
-    const fontSize = size <= 32 ? Math.max(size * 0.35, 10) : Math.max(size * 0.3, 16);
+    // הגבלת גודל מינימלי ומקסימלי לקלף
+    const constrainedSize = Math.min(Math.max(size, 24), 80);
+    
+    // התאמת גודל הפונט לפי גודל הקלף
+    const fontSize = constrainedSize <= 30 ? 
+                      Math.max(constrainedSize * 0.45, 10) : 
+                      Math.max(constrainedSize * 0.35, 14);
     
     const buttonStyle = {
         width: '100%',
@@ -12,9 +17,9 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         aspectRatio: '1',
         backgroundColor: isSelected ? '#4A5568' : STATUS_COLORS[status],
         border: status === 'missing' ? '1px solid #E2E8F0' : 'none',
-        borderRadius: '8px', // קצת יותר קטן במובייל
+        borderRadius: constrainedSize <= 30 ? '6px' : '8px',
         fontSize: `${fontSize}px`,
-        fontWeight: size <= 32 ? '700' : '500', // פונט בולט יותר במובייל
+        fontWeight: constrainedSize <= 30 ? '700' : '500',
         padding: '0',
         margin: '0',
         cursor: 'pointer',
@@ -27,8 +32,10 @@ const Card = ({ number, status, onClick, size, isSelected }) => {
         touchAction: 'manipulation',
         transition: 'all 0.2s',
         boxShadow: isSelected ? '0 0 0 2px #4A5568' : 'none',
-        // משפר את קריאות הספרות במובייל
-        textShadow: size <= 32 ? '0px 0px 1px rgba(0,0,0,0.2)' : 'none'
+        // תוספת צל לטקסט לשיפור הקריאות
+        textShadow: status !== 'missing' || isSelected ? '0px 0px 1px rgba(0,0,0,0.2)' : 'none',
+        minWidth: '24px', // מניעת קריסה של קלפים קטנים מדי
+        minHeight: '24px' // מניעת קריסה של קלפים קטנים מדי
     };
 
     return (
