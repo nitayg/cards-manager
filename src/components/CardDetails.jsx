@@ -1,8 +1,8 @@
-// CardDetails.jsx עם התאמות לתצוגה המפוצלת
+// CardDetails.jsx עם תיקון גודל האייקון
 import React from 'react';
 import { STATUS_COLORS } from '../utils/constants';
 
-const CardDetails = ({ card, onClose, isLandscape }) => {
+const CardDetails = ({ card, onClose, isLandscape, onStatusChange }) => {
     if (!card) return null;
 
     // המרה של סטטוס למלל בעברית
@@ -46,7 +46,7 @@ const CardDetails = ({ card, onClose, isLandscape }) => {
                 {/* סטטוס הקלף */}
                 <div className="mb-4 text-center">
                     <div 
-                        className="mx-auto w-24 h-24 rounded-lg flex items-center justify-center text-2xl font-bold"
+                        className="mx-auto w-16 h-16 rounded-lg flex items-center justify-center text-xl font-bold"
                         style={{ 
                             backgroundColor: STATUS_COLORS[card.status],
                             color: card.status === 'missing' ? '#1a1a1a' : '#FFFFFF'
@@ -59,10 +59,10 @@ const CardDetails = ({ card, onClose, isLandscape }) => {
                     </div>
                 </div>
 
-                {/* איזור תמונה (פלייסהולדר) */}
-                <div className="mb-4 bg-gray-100 rounded-lg p-4 flex items-center justify-center">
-                    <div className="text-gray-400">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-32 h-32">
+                {/* איזור תמונה (מוקטן משמעותית) */}
+                <div className="mb-3 flex items-center justify-center">
+                    <div className="text-gray-300">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-12 h-12">
                             <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="2"/>
                             <path d="M3 16l4-4a1 1 0 011.414 0L16 20" strokeWidth="2"/>
                             <path d="M16 14l2-2a1 1 0 011.414 0L22 15" strokeWidth="2"/>
@@ -71,36 +71,54 @@ const CardDetails = ({ card, onClose, isLandscape }) => {
                     </div>
                 </div>
 
-                {/* פעולות */}
-                <div className="space-y-3">
+                {/* פעולות - עם קישור למצבי הקלף */}
+                <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
-                        <button className="bg-green-600 text-white rounded-lg py-2 px-4 font-medium hover:bg-green-700">
+                        <button 
+                            className="bg-green-600 text-white rounded-lg py-2 px-3 font-medium hover:bg-green-700"
+                            onClick={() => onStatusChange('owned')}
+                        >
                             יש ברשותי
                         </button>
-                        <button className="bg-gray-200 text-gray-800 rounded-lg py-2 px-4 font-medium hover:bg-gray-300">
+                        <button 
+                            className="bg-gray-200 text-gray-800 rounded-lg py-2 px-3 font-medium hover:bg-gray-300"
+                            onClick={() => onStatusChange('missing')}
+                        >
                             חסר באוסף
                         </button>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-2">
-                        <button className="bg-pink-500 text-white rounded-lg py-2 px-4 font-medium hover:bg-pink-600">
+                        <button 
+                            className="bg-pink-500 text-white rounded-lg py-2 px-3 font-medium hover:bg-pink-600"
+                            onClick={() => onStatusChange('source1')}
+                        >
                             מקור 1
                         </button>
-                        <button className="bg-yellow-500 text-white rounded-lg py-2 px-4 font-medium hover:bg-yellow-600">
+                        <button 
+                            className="bg-yellow-500 text-white rounded-lg py-2 px-3 font-medium hover:bg-yellow-600"
+                            onClick={() => onStatusChange('source2')}
+                        >
                             מקור 2
                         </button>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-2">
-                        <button className="bg-purple-500 text-white rounded-lg py-2 px-4 font-medium hover:bg-purple-600">
+                        <button 
+                            className="bg-purple-500 text-white rounded-lg py-2 px-3 font-medium hover:bg-purple-600"
+                            onClick={() => onStatusChange('source3')}
+                        >
                             מקור 3
                         </button>
-                        <button className="bg-blue-700 text-white rounded-lg py-2 px-4 font-medium hover:bg-blue-800">
+                        <button 
+                            className="bg-blue-700 text-white rounded-lg py-2 px-3 font-medium hover:bg-blue-800"
+                            onClick={() => onStatusChange('source4')}
+                        >
                             מקור 4
                         </button>
                     </div>
                     
-                    <button className="w-full bg-black text-white rounded-lg py-3 font-medium hover:bg-gray-800">
+                    <button className="w-full bg-black text-white rounded-lg py-2 font-medium hover:bg-gray-800">
                         הוסף לעסקה
                     </button>
                 </div>

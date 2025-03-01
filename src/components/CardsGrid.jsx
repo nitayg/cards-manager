@@ -1,4 +1,4 @@
-// CardsGrid.jsx עם חלוקת מסך ברורה
+// CardsGrid.jsx עם תיקון בעיית ההסתרה
 import React, { useState, useEffect, useMemo } from 'react';
 import Card from './Card';
 import CardDetails from './CardDetails';
@@ -98,6 +98,22 @@ const CardsGrid = () => {
         });
         setSelectedCard(cards[number]);
     };
+    
+    // עדכון מצב הקלף
+    const handleCardStatusChange = (status) => {
+        if (!selectedCard) return;
+        
+        setCards(prev => {
+            const newCards = { ...prev };
+            newCards[selectedCard.number].status = status;
+            return newCards;
+        });
+        
+        setSelectedCard(prev => ({
+            ...prev,
+            status: status
+        }));
+    };
 
     return (
         <div className="bg-gray-50" style={{ direction: 'rtl', height: '100vh', overflow: 'hidden' }}>
@@ -106,6 +122,8 @@ const CardsGrid = () => {
                 {/* חלק עליון/ימני - רשת הקלפים */}
                 <div style={{
                     flex: isLandscape ? (selectedCard ? '0.6' : '1') : (selectedCard ? '0.5' : '1'),
+                    height: !isLandscape && selectedCard ? '50%' : '100%', // הגבלת גובה במצב מאונך
+                    maxHeight: !isLandscape && selectedCard ? '50%' : '100%', // חשוב! מונע הסתרת הגריד
                     display: 'flex',
                     flexDirection: 'column',
                     overflowY: 'auto',
@@ -114,7 +132,7 @@ const CardsGrid = () => {
                     borderLeft: isLandscape && selectedCard ? '1px solid #e2e8f0' : 'none',
                 }}>
                     {/* כותרת */}
-                    <div className="p-2 text-center">
+                    <div className="p-2 text-center sticky top-0 bg-gray-50 z-10">
                         <h1 className="text-xl font-bold">מנהל אוסף קלפי כדורגל</h1>
                     </div>
                     
@@ -137,6 +155,8 @@ const CardsGrid = () => {
                 {selectedCard && (
                     <div style={{
                         flex: isLandscape ? '0.4' : '0.5',
+                        height: !isLandscape ? '50%' : '100%', // הגבלת גובה במצב מאונך
+                        maxHeight: !isLandscape ? '50%' : '100%', // חשוב! מגביל את גובה הפאנל ב-50%
                         backgroundColor: 'white',
                         boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
                         transition: 'all 0.3s ease',
@@ -157,6 +177,7 @@ const CardsGrid = () => {
                                 });
                             }}
                             isLandscape={isLandscape}
+                            onStatusChange={handleCardStatusChange}
                         />
                     </div>
                 )}
